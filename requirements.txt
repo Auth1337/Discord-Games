@@ -1,6 +1,6 @@
-discord.py>=1.7.3
+discord.py
 english-words
 chess
-akinator.py
+git+https://github.com/KaramveerPlayZ/akinator.py
 Pillow
 typing_extensions
