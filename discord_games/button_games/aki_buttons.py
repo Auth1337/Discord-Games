@@ -4,7 +4,7 @@ from typing import Optional, ClassVar
 
 import discord
 from discord.ext import commands
-from akinator import Answer, CantGoBackAnyFurther
+from akinator import CantGoBackAnyFurther
 
 from ..aki import Akinator
 from ..utils import DiscordColor, DEFAULT_COLOR, BaseView
@@ -16,11 +16,11 @@ class AkiButton(discord.ui.Button['AkiView']):
 
 class AkiView(BaseView):
     OPTIONS: ClassVar[dict[str, discord.ButtonStyle]] = {
-        'yes': discord.ButtonStyle.green,
-        'no': discord.ButtonStyle.red,
-        'idk': discord.ButtonStyle.blurple,
-        'probably': discord.ButtonStyle.gray,
-        'probably not': discord.ButtonStyle.gray,
+        'Yes': discord.ButtonStyle.green,
+        'No': discord.ButtonStyle.red,
+        'Idk': discord.ButtonStyle.blurple,
+        'Probably': discord.ButtonStyle.gray,
+        'Probably Not': discord.ButtonStyle.gray,
     }
 
     def __init__(self, game: BetaAkinator, *, timeout: float) -> None:
@@ -54,19 +54,19 @@ class AkiView(BaseView):
         if interaction.user != game.player:
             return await interaction.response.send_message(content="This isn't your game", ephemeral=True)
 
-        if answer == "cancel":
+        if answer == "Cancel":
             await interaction.message.reply("Session ended", mention_author=True)
             self.stop()
             return await interaction.message.delete()
 
-        if answer == "back":
+        if answer == "Back":
             try:
                 await game.aki.back()
                 embed = game.build_embed(instructions=False)
             except CantGoBackAnyFurther:
                 return await interaction.response.send_message('I cant go back any further!', ephemeral=True)
         else:
-            await game.aki.answer(Answer.from_str(answer))
+            await game.aki.answer(str(answer))
 
             if game.aki.progression >= game.win_at:
                 self.disable_all()
