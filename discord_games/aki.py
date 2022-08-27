@@ -3,15 +3,16 @@ from __future__ import annotations
 from typing import Optional, ClassVar, Any
 from enum import Enum
 import asyncio
-
+#import akinator as akinator_shit_
 import discord
 from discord.ext import commands
 
 from akinator import (
-    AsyncAkinator as AkinatorGame,
+    async_aki as AkinatorGame,
     CantGoBackAnyFurther,
-    Answer,
 )
+
+#from AkinatorGame.Akinator import answer as Answer
 
 from .utils import DiscordColor, DEFAULT_COLOR
 
@@ -39,7 +40,7 @@ class Akinator:
     )
 
     def __init__(self) -> None:
-        self.aki: AkinatorGame = AkinatorGame()
+        self.aki: AkinatorGame = AkinatorGame.Akinator()
 
         self.player: Optional[discord.User] = None
         self.win_at: Optional[int] = None
@@ -86,9 +87,9 @@ class Akinator:
         embed.title = "Character Guesser Engine Results"
         embed.description = f"Total Questions: `{self.aki.step + 1}`"
 
-        embed.add_field(name="Character Guessed", value=f"\n**Name:** {self.guess.name}\n{self.guess.description}")
+        embed.add_field(name="Character Guessed", value=f"\n**Name:** {self.guess['name']}\n{self.guess['description']}")
 
-        embed.set_image(url=self.guess.absolute_picture_path)
+        embed.set_image(url=self.guess['absolute_picture_path'])
         embed.set_footer(text="Was I correct?")
 
         return embed
@@ -193,7 +194,7 @@ class Akinator:
                 except CantGoBackAnyFurther:
                     await self.message.reply('I cannot go back any further', delete_after=10)
             else:
-                answer = Answer.from_str(Options(emoji).name)
+                answer = str(Options(emoji).name)
                 await self.aki.answer(answer)
 
             embed = self.build_embed()
